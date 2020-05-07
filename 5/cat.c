@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-static void do_cat(const char *path);
+static void do_cat(const char *path, int isStdin);
 static void die(const char *s);
 
 int
