@@ -16,11 +16,11 @@ main(int argc, char *argv[])
 
     if(argc == 1){
         for(;;){
-            do_cat("\0", 1);
+            do_cat("\0", 1, isCountLine);
         }
     }
     for(i=1; i<argc; i++){
-        if(argv[i] == 'l') isCountLine = 1;
+        if(!strcmp(argv[i], '-l')) isCountLine = 1;
     }
     for(i=1; i<argc; i++){
         do_cat(argv[i], 0, isCountLine); // コマンドライン引数に指定されたファイルを一つずつ処理
@@ -35,7 +35,8 @@ do_cat(const char *path, int isStdin, int isCountLine)
 {
     int fd;
     unsigned char buf[BUFFER_SIZE];
-    int n, cnt, cnt_char;
+    int n, cnt;
+    char cnt_char[5];
 
     if(isStdin){
         for(;;){
@@ -54,7 +55,7 @@ do_cat(const char *path, int isStdin, int isCountLine)
             sprintf(cnt_char, "%d", cnt);
             if(n == 0) break; // nが０の場合はストリームからの読み込みが終わったということ（この回のループで読み込んだバイト数が０）なので、抜ける
             if(write(STDOUT_FILENO, buf, n) < 0) die(path); // バッファの中身を標準出力に書き込み（書き込むのはバッファのサイズ分じゃなくて、読み込んだバイト数分　<=　そうしないとわけわからん値書き込んじゃう）
-            if(write(STDOUT_FILENO, cnt, sizeof cnt) < 0) die(path);
+            if(write(STDOUT_FILENO, cnt_char, sizeof cnt_char) < 0) die(path);
         }
         if(close(fd) < 0) die(path); // ストリームを破棄
     }
