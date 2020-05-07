@@ -15,11 +15,11 @@ main(int argc, char *argv[])
 
     if(argc == 1){
         for(;;){
-            do_cat("\0", true);
+            do_cat("\0", 1);
         }
     }
     for(i=1; i<argc; i++){
-        do_cat(argv[i], false); // コマンドライン引数に指定されたファイルを一つずつ処理
+        do_cat(argv[i], 0); // コマンドライン引数に指定されたファイルを一つずつ処理
     }
     exit(0);
 }
@@ -27,7 +27,7 @@ main(int argc, char *argv[])
 #define BUFFER_SIZE 2048
 
 static void
-do_cat(const char *path, bool isStdin)
+do_cat(const char *path, int isStdin)
 {
     int fd;
     unsigned char buf[BUFFER_SIZE];
