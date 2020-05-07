@@ -54,7 +54,7 @@ do_cat(const char *path, int isStdin, int isCountLine)
             n = read(fd, buf, sizeof buf); // ストリームからバッファのサイズ分読み込む
             if(n < 0) die(path); // nが負（読み込み失敗）の場合は、エラー終了
             cnt = count_line(buf, sizeof buf);
-            sprintf(cnt_char, "%d", cnt);
+            sprintf(cnt_char, "%d\n", cnt);
             if(n == 0) break; // nが０の場合はストリームからの読み込みが終わったということ（この回のループで読み込んだバイト数が０）なので、抜ける
             if(write(STDOUT_FILENO, buf, n) < 0) die(path); // バッファの中身を標準出力に書き込み（書き込むのはバッファのサイズ分じゃなくて、読み込んだバイト数分　<=　そうしないとわけわからん値書き込んじゃう）
             if(write(STDOUT_FILENO, cnt_char, sizeof cnt_char) < 0) die(path);
