@@ -15,11 +15,11 @@ main(int argc, char *argv[])
 
     if(argc == 1){
         for(;;){
-            do_cat(stdin);
+            do_cat("\0", true);
         }
     }
     for(i=1; i<argc; i++){
-        do_cat(argv[i]); // コマンドライン引数に指定されたファイルを一つずつ処理
+        do_cat(argv[i], false); // コマンドライン引数に指定されたファイルを一つずつ処理
     }
     exit(0);
 }
@@ -27,21 +27,31 @@ main(int argc, char *argv[])
 #define BUFFER_SIZE 2048
 
 static void
-do_cat(const char *path)
+do_cat(const char *path, bool isStdin)
 {
     int fd;
     unsigned char buf[BUFFER_SIZE];
     int n;
 
-    fd = open(path, O_RDONLY); // ストリームを作成
-    if(fd < 0) die(path); // 作成に失敗したらエラー終了
-    for(;;){
-        n = read(fd, buf, sizeof buf); // ストリームからバッファのサイズ分読み込む
-        if(n < 0) die(path); // nが負（読み込み失敗）の場合は、エラー終了
-        if(n == 0) break; // nが０の場合はストリームからの読み込みが終わったということ（この回のループで読み込んだバイト数が０）なので、抜ける
-        if(write(STDOUT_FILENO, buf, n) < 0) die(path); // バッファの中身を標準出力に書き込み（書き込むのはバッファのサイズ分じゃなくて、読み込んだバイト数分　<=　そうしないとわけわからん値書き込んじゃう）
+    if(isStdin){
+        for(;;){
+            n = read(STDIN_FILENO, buf, sizeof buf);
+            if(n < 0) die("stdin");
+            if(n == 0) break;
+            if(write(STDOUT_FILENO, buf, n) < 0) die("stdin");
+        }
+    }else{
+        fd = open(path, O_RDONLY); // ストリームを作成
+        if(fd < 0) die(path); // 作成に失敗したらエラー終了
+        for(;;){
+            n = read(fd, buf, sizeof buf); // ストリームからバッファのサイズ分読み込む
+            if(n < 0) die(path); // nが負（読み込み失敗）の場合は、エラー終了
+            if(n == 0) break; // nが０の場合はストリームからの読み込みが終わったということ（この回のループで読み込んだバイト数が０）なので、抜ける
+            if(write(STDOUT_FILENO, buf, n) < 0) die(path); // バッファの中身を標準出力に書き込み（書き込むのはバッファのサイズ分じゃなくて、読み込んだバイト数分　<=　そうしないとわけわからん値書き込んじゃう）
+        }
+        if(close(fd) < 0) die(path); // ストリームを破棄
     }
-    if(close(fd) < 0) die(path); // ストリームを破棄
+
 }
 
 static void
