@@ -13,8 +13,8 @@ main(int argc, char *argv[])
 {
     int i;
 
-    if(argc < 2){
-        fprintf(stderr, "%s: file name not given\n", argv[0])
+    if(argc == 0){
+        do_cat(STDIN_FILENO);
     }
     for(i=1; i<argc; i++){
         do_cat(argv[i]); // コマンドライン引数に指定されたファイルを一つずつ処理
