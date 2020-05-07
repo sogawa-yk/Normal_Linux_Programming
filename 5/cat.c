@@ -1,3 +1,8 @@
+/*
+    複数ファイルを引数に取ったときに正しくファイルの行数を表示することができない。
+    原因が特定できなかったので、とりあえずこのまま本を読み進めてまた考える。
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -57,7 +62,6 @@ do_cat(const char *path, int isStdin, int isCountLine)
             if(write(STDOUT_FILENO, buf, n) < 0) die(path); // バッファの中身を標準出力に書き込み（書き込むのはバッファのサイズ分じゃなくて、読み込んだバイト数分　<=　そうしないとわけわからん値書き込んじゃう）
             if(isCountLine){
                 cnt = count_line(buf, sizeof buf);
-                printf(cnt)
                 sprintf(cnt_char, "%d\n", cnt);
                 if(write(STDOUT_FILENO, cnt_char, sizeof cnt_char) < 0) die(path);
             }
