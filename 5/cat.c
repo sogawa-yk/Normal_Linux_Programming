@@ -15,7 +15,7 @@ main(int argc, char *argv[])
 
     if(argc == 1){
         for(;;){
-            do_cat(STDIN_FILENO);
+            do_cat(stdin);
         }
     }
     for(i=1; i<argc; i++){
