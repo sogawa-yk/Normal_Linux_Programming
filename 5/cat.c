@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
 
 static void do_cat(const char *path, int isStdin, int isCountLine);
 static void die(const char *s);
