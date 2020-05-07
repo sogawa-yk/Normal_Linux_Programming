@@ -24,6 +24,7 @@ main(int argc, char *argv[])
         if(!strcmp(argv[i], "-l")) isCountLine = 1;
     }
     for(i=1; i<argc; i++){
+        if(!strcmp(argv[i], "-l")) continue;
         do_cat(argv[i], 0, isCountLine); // コマンドライン引数に指定されたファイルを一つずつ処理
     }
     exit(0);
