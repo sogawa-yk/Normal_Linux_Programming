@@ -13,7 +13,7 @@ main(int argc, char *argv[])
 {
     int i;
 
-    if(argc == 0){
+    if(argc == 1){
         for(;;){
             do_cat(STDIN_FILENO);
         }
